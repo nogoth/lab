@@ -1,29 +1,22 @@
-import pyttsx3
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, AIMessage
+import re
 
-def main():
+def removeThinks(message: AIMessage):
+    regex_pattern = r'<think>[\s\S]*?</think>'
+    return  re.sub(regex_pattern, '', message)
 
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 70)
-    engine.setProperty('volume', 1.0)
-    engine.setProperty('voice', 'mb-en1')
-    engine.setProperty('voice', 'en')
+def talkToServer():
+  print("hi")
+  # Requires ollama be installed and a model downloaded
+  #  ollama pull qwen3:1.7b
+  # note: chatollama works with servers that are ollama starters not mozilla-ocho/llama.cpp servers
+  model = "llava-v1.5-7b"
+  model = "qwen3:1.7b"
+  llm = ChatOllama(model=model, temperature=0.7) # reasoning=False) # for not think
+  response = llm.invoke([HumanMessage(content="Hello, how are you?")])
+  print(removeThinks(response.content))
+  print(response.content)
 
-    voices = engine.getProperty('voices')
-    print(voices[0])
-    printVoices(voices)
+talkToServer()
 
-#    engine.setProperty('voice', 'us-mbrola-1')
-    engine.say("this a test of the engine and it can say things")
-    engine.runAndWait()
-    # example of just running with a speak, engine is a global so it'll remember what was set up
-    pyttsx3.speak("what is that you need grace in")
-    engine.stop()
-
-def printVoices(voicesArray):
-    map(lambda x: print(x), voicesArray)
-    for x in voicesArray:
-        print(x)
-
-
-if __name__ == "__main__":
-    main()

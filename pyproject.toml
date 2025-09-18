@@ -3,7 +3,7 @@ name = "github-lab"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
-    "pyttsx3>=2.99",
+    "langchain-ollama>=0.3.8",
 ]
