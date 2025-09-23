@@ -14,6 +14,14 @@ mcp = FastMCP("speakingExample")
 
 @mcp.tool
 def speak_it(content: str):
+  """Speaks the provided text content.
+
+  This function takes a string as input and uses the system's text-to-speech
+  capabilities to vocalize the content.
+
+  Args:
+      content (str): The string of text to be spoken aloud.
+  """
   wav = tts.tts(text=content, speaker="p330")
   sd.play(wav, samplerate=22050)
   sd.wait() # Wait until file is done playing
