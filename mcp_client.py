@@ -13,6 +13,7 @@ async def main():
         result = await client.call_tool("speak_it", {"content":"Yes sir"})
         result = await client.call_tool("speak_it", {"content":"No sir"})
         result = await client.call_tool("speak_it", {"content":"[MAN] cough"})
+        result = await client.call_tool("ask_ollama_question", {"question": "What is the capital of Belgium?"})
         print(result) 
 
 
