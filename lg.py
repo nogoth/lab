@@ -1,19 +1,16 @@
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.messages import SystemMessage
 import asyncio
 from typing import TypedDict, Annotated, List, Union
 import operator
 
-# LangChain/Ollama imports
 from langchain_ollama import ChatOllama
 from langchain_core.messages import AIMessage, HumanMessage, BaseMessage, ToolMessage
 from langchain_core.tools import BaseTool
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import SystemMessage
 
-# LangGraph imports
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, create_react_agent
 
-# MCP imports
 from fastmcp import Client
 from langchain_mcp_adapters.tools import load_mcp_tools
 
@@ -75,6 +72,12 @@ SYSTEM_PROMPT2=(
     "\n\n--- TERMINATION INSTRUCTION ---"
     "If the last message in the history is a ToolMessage (Observation), your next response MUST be the final answer."
 )
+
+async def next_lines(n: int, prev: str, app) -> str:
+    prompt = f"Generate the next {n} lines of a story using ```{prev}```"
+    state = await app.ainvoke({"messages": [HumanMessage(content=prompt)]})
+    return state["messages"][-1].content
+
 async def talkToServer():
     print("Initializing LangGraph Agent...")
     model_name = "qwen3:1.7b" # Use a model with good tool-calling ability
@@ -107,11 +110,9 @@ async def talkToServer():
         # This node handles parsing the tool call and running the function.
         workflow.add_node("tools", ToolNode(tools))
 
-        # Set the entry point: Start by calling the agent
         workflow.set_entry_point("agent")
 
-        # Add the conditional edge for routing
-        # After the agent runs, call 'should_continue' to decide where to go
+        # Add the conditional edge for routing after the agent runs, call 'should_continue' to decide where to go
         workflow.add_conditional_edges(
             "agent",
             should_continue,
@@ -121,33 +122,28 @@ async def talkToServer():
             },
         )
 
-        # Add the return edge from the tools
         # After the tools run, they must go back to the agent to summarize the results
         workflow.add_edge("tools", "agent")
 
-        # Compile the graph into a runnable
         app = workflow.compile()
-        print("LangGraph Agent is ready.")
 
-        # --- 5. Invoke the Graph ---
-        user_input = "Please use the speak_it tool to say 'Welcome to LangGraph, it works!'"
+        await app.ainvoke({"messages": [HumanMessage(content="Speak the answer to the question `What is the capital of Belgium`")]})
+        await app.ainvoke({"messages": [HumanMessage(content="Speak the answer to the question `What is the capital of Canada and talk about three restaurants there?`")]})
         
-        # The input is a dict with the initial message for the state
+        user_input = "Please use the speak_it tool to say 'Welcome to LangGraph, it works!'"
         final_state = await app.ainvoke({"messages": [HumanMessage(content=user_input)]})
-        #print(final_state)
-        #final_state = await app.ainvoke({"messages": [HumanMessage(content="What is the Capital of France? Please speak it?")]})
-        final_state = await app.ainvoke({"messages": [HumanMessage(content="Generate the first two lines of a story. Come up with your own elements it should have.")]})
+
+        final_state = await app.ainvoke({"messages": [HumanMessage(content="Generate the first two lines of a story. Generate three key elements on your own.")]})
         
         print(final_state)
-        # The final answer is in the last message of the state's message list
         final_response = final_state["messages"][-1].content
         final_state = await app.ainvoke({"messages": [HumanMessage(content=f"Generate the next two lines of a story using ```{final_response}```")]})
-        f = final_state["messages"][-1].content
-        final_state = await app.ainvoke({"messages": [HumanMessage(content=f"Generate the next two lines of a story using ```{f}```")]})
 
+        f = await next_lines(2,final_state["messages"][-1].content, app)
+        f = await next_lines(2,f, app)
+        f = await next_lines(2,f, app)
         print("\n--- Final Agent Response ---")
         print(final_response)
         
 if __name__ == "__main__":
-    # You will need to install LangGraph: pip install langgraph
     asyncio.run(talkToServer())
