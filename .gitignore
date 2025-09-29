@@ -2,3 +2,4 @@
 llama.log
 voices
 *.code-workspace
+__pycache__/*

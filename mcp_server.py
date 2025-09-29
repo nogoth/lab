@@ -51,7 +51,7 @@ def ask_ollama_question(question: str) -> str:
   the model's response. Questions have question marks.
 
   Args:
-      question (str): The question to be asked to the Ollama model.
+      question (str): The question to be asked to the Ollama model. it should have a question mark in it. 
 
   Returns:
       str: The response from the Ollama model.
