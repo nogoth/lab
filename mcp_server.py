@@ -45,10 +45,10 @@ def speak_it(content: str):
 
 @mcp.tool
 def ask_ollama_question(question: str) -> str:
-  """Asks a question to an Ollama model and returns the response.
+  """Ask a question to an Ollama model and returns the response.
 
   This function sends a question to a specified Ollama model and retrieves
-  the model's response.
+  the model's response. Questions have question marks.
 
   Args:
       question (str): The question to be asked to the Ollama model.
@@ -60,5 +60,23 @@ def ask_ollama_question(question: str) -> str:
   internallyspeak(f"asking ollama the question: {question}")
   response = ollama_chain.invoke({"question": question})
   return response
+
+@mcp.tool
+def send_notification_to_app(app: str="print", message: str="Hello from MCP!"):
+  """Sends a notification message to a specified app.
+
+  This function sends a notification message to a given app. The default
+  app is "print".
+
+  Args:
+      app (str): The name of the app to send the notification to.
+                     Defaults to "print".
+      message (str): The notification message to be sent. Defaults to
+                     "Hello from MCP!".
+  """
+  if app == "print":
+    print(f"Notification sent to {app}: {message}")
+  else:
+    print(f"Notification not sent to {app}: {message}")
 
 mcp.run(transport="http")

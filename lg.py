@@ -35,9 +35,9 @@ def should_continue(state: AgentState) -> str:
     """Decides whether to continue the loop."""
     last_message = state["messages"][-1]
 
-    print(f"Type: {last_message.type}")
-    print(f"Tool calls: {last_message.tool_calls}")
-    print(f"Content: {last_message.content} {len(last_message.content)}")
+    print(f"SC:   Type: {last_message.type}")
+    print(f"SC:   Tool calls: {last_message.tool_calls}")
+    print(f"SC:   Content: {last_message.content} {len(last_message.content)}")
 
     # 1. Check if the LLM is requesting tool use.
     if isinstance(last_message, AIMessage) and last_message.tool_calls:
@@ -74,7 +74,8 @@ SYSTEM_PROMPT2=(
 )
 
 async def next_lines(n: int, prev: str, app) -> str:
-    prompt = f"Generate the next {n} lines of a story using ```{prev}```"
+    prompt = f"Generate the next {n} lines of a story using ```{prev}``` as the previous lines as inspiration"#. Only return the lines generated and also Notify me in print when you do it." #should hit notify tool
+    print(f"PROMPT:     {prompt}")
     state = await app.ainvoke({"messages": [HumanMessage(content=prompt)]})
     return state["messages"][-1].content
 
@@ -127,23 +128,25 @@ async def talkToServer():
 
         app = workflow.compile()
 
-        await app.ainvoke({"messages": [HumanMessage(content="Speak the answer to the question `What is the capital of Belgium`")]})
-        await app.ainvoke({"messages": [HumanMessage(content="Speak the answer to the question `What is the capital of Canada and talk about three restaurants there?`")]})
+        #await app.ainvoke({"messages": [HumanMessage(content="Speak the answer to the question `What is the capital of Belgium`")]})
+        #await app.ainvoke({"messages": [HumanMessage(content="Speak the answer to the question `What is the capital of Canada and talk about three restaurants there?`")]})
         
-        user_input = "Please use the speak_it tool to say 'Welcome to LangGraph, it works!'"
-        final_state = await app.ainvoke({"messages": [HumanMessage(content=user_input)]})
+        #user_input = "Please use the speak_it tool to say 'Welcome to LangGraph, it works!'"
+        #final_state = await app.ainvoke({"messages": [HumanMessage(content=user_input)]})
 
-        final_state = await app.ainvoke({"messages": [HumanMessage(content="Generate the first two lines of a story. Generate three key elements on your own.")]})
-        
+        stack = []
+        # start the story
+        final_state = await app.ainvoke({"messages": [HumanMessage(content="Using three unique elements, Generate the first two lines of a story.")]})
         print(final_state)
-        final_response = final_state["messages"][-1].content
-        final_state = await app.ainvoke({"messages": [HumanMessage(content=f"Generate the next two lines of a story using ```{final_response}```")]})
+        f = final_state["messages"][-1].content
+        print(f"Content: {f}")
+        stack.append(f)
+        f1 = await next_lines(2,f, app)
+        print(final_state["messages"][-1].content)
+        stack.append(f1)
 
-        f = await next_lines(2,final_state["messages"][-1].content, app)
-        f = await next_lines(2,f, app)
-        f = await next_lines(2,f, app)
         print("\n--- Final Agent Response ---")
-        print(final_response)
+        print(stack)
         
 if __name__ == "__main__":
     asyncio.run(talkToServer())
