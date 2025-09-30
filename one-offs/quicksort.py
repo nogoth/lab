@@ -1,6 +1,5 @@
 import random
 
-
 def quicksort(array: list) -> list:
     if len(array) < 2:
         return array
@@ -50,7 +49,19 @@ def unzip_tuples(tuple_array: list) -> list: # i need to figure out how to flatt
     return [ [x] * y for (x,y) in tuple_array ] 
     
 
-
+#
+# fisher yates shuffle, i think
+#
+def f_y_shuff(arr: list) -> list:
+    # remember there are no for(x=0;x<10;x++) in python3 native
+    print(f"f_y_1: {arr}")
+    for i in range(len(arr)):
+        for j in range(len(arr) - i):
+            if (i < j):
+                p = random.randint(i,j)
+                arr[i], arr[p] = arr[p], arr[i]
+    print(f"f_y_2: {arr}")
+    return arr
 
 
 if __name__ == "__main__":
@@ -61,3 +72,4 @@ if __name__ == "__main__":
     print(count_duplicates(our_list))
     print(f"{f_count_duplicates(our_list)} duplicates")
     print(unzip_tuples(count_duplicates(our_list)))
+    print(f_y_shuff(our_list[::-1]))
