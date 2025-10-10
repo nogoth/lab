@@ -1,5 +1,6 @@
 import random
 
+
 def quicksort(array: list) -> list:
     if len(array) < 2:
         return array
@@ -17,6 +18,7 @@ def quicksort(array: list) -> list:
 def randArray(min: int = 1, max: int = 20, size: int = 20) -> list:
     return [random.randint(min, max) for _ in range(size)]
 
+
 #
 #  Original way i thought of counting duplicates
 #
@@ -32,22 +34,25 @@ def count_duplicates(array: list) -> list:
             stack.append((y, count))
             y = x
             count = 1
-    stack.append((y, count)) # add the final tuple in
+    stack.append((y, count))  # add the final tuple in
     return stack
+
 
 #
 # attempt to do a functional programming version of it
 #
 def f_count_duplicates(array: list) -> list:
     uniques = sorted(list(set(array)))
-    # if we were to do, uniques.sort() then it isn't functional anymore. It has a mutation to make it a sort. 
+    # if we were to do, uniques.sort() then it isn't functional anymore. It has a mutation to make it a sort.
 
-    return [ (x, array.count(x)) for x in uniques] 
+    return [(x, array.count(x)) for x in uniques]
 
 
-def unzip_tuples(tuple_array: list) -> list: # i need to figure out how to flatten() the list afterwards
-    return [ [x] * y for (x,y) in tuple_array ] 
-    
+def unzip_tuples(
+    tuple_array: list,
+) -> list:  # i need to figure out how to flatten() the list afterwards
+    return [[x] * y for (x, y) in tuple_array]
+
 
 #
 # fisher yates shuffle, i think
@@ -55,11 +60,11 @@ def unzip_tuples(tuple_array: list) -> list: # i need to figure out how to flatt
 def f_y_shuff(arr: list) -> list:
     # remember there are no for(x=0;x<10;x++) in python3 native
     print(f"f_y_1: {arr}")
-    for i in range(len(arr)):
-        for j in range(len(arr) - i):
-            if (i < j):
-                p = random.randint(i,j)
-                arr[i], arr[p] = arr[p], arr[i]
+    for i in range(len(arr) - 1)[
+        ::-1
+    ]:  # iterate from second last in list to the first entry
+        p = random.randint(0, i)
+        arr[i], arr[p] = arr[p], arr[i]
     print(f"f_y_2: {arr}")
     return arr
 

@@ -11,5 +11,6 @@ dependencies = [
     "langchain-mcp-adapters>=0.1.10",
     "langchain-ollama>=0.3.8",
     "langgraph>=0.6.7",
+    "pytest>=8.4.2",
     "sounddevice>=0.5.2",
 ]
