@@ -1,23 +1,21 @@
 import random
 
-def twosum(target: int, numbers: list[int]) -> list[int]:
-    print(numbers)
-    i = 0
-    j = len(numbers)-1
-    while(i<j):
-        summy = numbers[i] + numbers[j]
-        match summy:
-            case _ if summy == target:
-                return [i+1, j+1]
-            case _ if summy < target:
+class Solution:
+    def twoSum(self, numbers: list[int],target: int) -> list[int]:
+        i = 0
+        j = len(numbers)-1
+        while(i<j):
+            summy = numbers[i] + numbers[j]
+            if summy < target:
                 i += 1
-            case _ if summy > target:
+            elif summy == target:
+                return [i+1, j+1]
+            elif summy > target:
                 j -= 1
-            case _ if i == j:
-                return []
+        return []
+
 arr = [ random.randint(1,100) for x in range(100) ]
 
 arr.sort()
 
-print (twosum(10, [1,2,3,4,6]))
-print (twosum(10, arr))
+print (Solution().twoSum( [2,7,11,15],9))
