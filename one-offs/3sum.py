@@ -25,7 +25,7 @@ def threesum(numbers: list[int]) -> list(list[int]): # and return a list of trip
         print(f"  {x}  ")
         i = x+1
         if x > 0 and numbers[i] == numbers[x]:
-            continue
+            print("continue")
         j = len(numbers)-1
         while(i<j):
             print([numbers[x], numbers[i], numbers[j] ])
