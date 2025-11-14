@@ -1,33 +1,27 @@
 import random
 import sys
 
-arr = [ random.randint(-100,120) for x in range(1000) ]
+arr = [ random.randint(-100,120) for x in range(10) ]
 # example given says take a file, read each line, it will be of a kind of each line = 1,2,3,4\n1,4,5\n
 def balancer(nums: list[int]) -> list(list[int]):
     # given an array partition it into two balanced sides, balanced defined as the sum of the elements
     # preserve order however, numbers can be negative, it will fit all in memory, partitions will likely be differing lengths
     # it's a two tail
+    print(f"**  ${nums}")
     i = 0
     j = len(nums)-1
-    lsum, rsum = nums[i], nums[j]
-    while(i<j):
-        if lsum < rsum:
-            i += 1
+    lsum, rsum = 0,0
+    while i <= j :
+#        print(f"STATS: lsum={lsum} {nums[i]} = {i}    -- {j} = {nums[j]} {rsum}=rsum")
+        if lsum <= rsum:
             lsum += nums[i]
-        elif lsum > rsum:
-            j -= 1
-            rsum += nums[j]
-        else:
             i += 1
+        else:
+            rsum += nums[j]
             j -= 1
-            # they are equal
-            # what if there are two flanking numbers but we haven't hit sum yet
-            #  previously did i = j
-            print(f" {i} left:{lsum} right:{rsum}")
-            sys.stdin.read()
+#    print(f"Final STATS: lsum={lsum} {nums[i]} = {i}    -- {j} = {nums[j]} {rsum}=rsum")
 
-    print(f" {i} left:{lsum} right:{rsum}")
-    if lsum == rsum:
+    if lsum == rsum: # 
         return [ nums[:i], nums[i:] ]
     else:
         return []
@@ -49,10 +43,26 @@ def turn_array(raw_string: str) -> list:
         return [ int(x) for x in raw_string.split(",") ] 
     return []
 
-#print(f"{balancer([1,2,3,4])}")
-#print(f"{balancer([1,4,5])}")
-#print(f"{balancer(arr)}")
+
+def ponies():
+    for x in sys.stdin:
+        ar = turn_array(x)
+        if ar:
+    #        print(f"{balancer(ar) for _ if balancer(ar)}")
+            balanced = balancer(ar)
+            print(f"{balanced}" if balanced else "")
+
+print(f"{balancer([1,3,4,1])}")
+print(f"{balancer([1,2,3,4,2,1])}")
+print(f"{balancer([1,2,3,5,0,1])}")
+print(f"{balancer([1,2,3,4])}")
+print(f"{balancer([1,4,5])}")
+print(f"{balancer(arr)}")
 print(f"{balancer([1,2,3,4,1,1])}")
+print(f"{balancer([1,4,1,3,1])}")
+print(f"{balancer([1,4,1,3,1])}")
+print(f"{balancer([2,7,10,-1])}")
+print(f"{balancer([2,7,10,19])}")
 
 #- print(f"{turn_array('1,2,3,4,10,01,-1')}")
 #- print(f"{turn_array('1')}")
@@ -60,10 +70,3 @@ print(f"{balancer([1,2,3,4,1,1])}")
 #- print(f"{turn_array('\n')}")
 
 
-
-for x in sys.stdin:
-    ar = turn_array(x)
-    if ar:
-#        print(f"{balancer(ar) for _ if balancer(ar)}")
-        balanced = balancer(ar)
-        print(f"{balanced}" if balanced else "")
