@@ -6,8 +6,8 @@ arr = [ random.randint(-100,120) for x in range(10) ]
 def balancer(nums: list[int]) -> list(list[int]):
     # given an array partition it into two balanced sides, balanced defined as the sum of the elements
     # preserve order however, numbers can be negative, it will fit all in memory, partitions will likely be differing lengths
-    # it's a two tail
-    print(f"**  ${nums}")
+    # HINT: it's a two tail
+#    print(f"**  ${nums}")
     i = 0
     j = len(nums)-1
     lsum, rsum = 0,0
@@ -25,13 +25,12 @@ def balancer(nums: list[int]) -> list(list[int]):
         return [ nums[:i], nums[i:] ]
     else:
         return []
-
-def validate_string(raw_string: str) -> bool:
-    #define a class of items that are allowed
-    #1-9,-,' '
-    # could take the string, split it into each char and then uniq the compare, heavy lifting though
-    # guess we can just iterate over the split and if it throws an error popout
-    for val in raw_string.split(","): #granted we now have two splits... fix later
+#
+# give a list of strings if they are all integers return true
+#   otherwise the first failure, just say False and we can move on
+# -- 
+def valid_integer_list(stringsList: list) -> bool:
+    for val in stringsList:
         try:
             v = int(val)
         except ValueError:
@@ -39,16 +38,16 @@ def validate_string(raw_string: str) -> bool:
     return True
 
 def turn_array(raw_string: str) -> list:
-    if validate_string(raw_string):
-        return [ int(x) for x in raw_string.split(",") ] 
+    ta_array = raw_string.split(",")
+    if valid_integer_list(ta_array):
+        return [ int(x) for x in ta_array ] 
     return []
 
 
-def ponies():
+def read_stdin_output_balanced():
     for x in sys.stdin:
         ar = turn_array(x)
         if ar:
-    #        print(f"{balancer(ar) for _ if balancer(ar)}")
             balanced = balancer(ar)
             print(f"{balanced}" if balanced else "")
 
@@ -64,9 +63,8 @@ print(f"{balancer([1,4,1,3,1])}")
 print(f"{balancer([2,7,10,-1])}")
 print(f"{balancer([2,7,10,19])}")
 
-#- print(f"{turn_array('1,2,3,4,10,01,-1')}")
-#- print(f"{turn_array('1')}")
-#- print(f"{turn_array('1,a')}")
-#- print(f"{turn_array('\n')}")
-
-
+# test to make sure that turn array handles at least some lined that could happen in the input
+assert turn_array("\n") == [], "strange spaced characters made an array" 
+assert turn_array("1,a") == [], "arrays that have characters made an integer array"
+assert turn_array("1") == [1], "single element didn't create a single element array"
+assert turn_array('1,2,3,4,10,01,-1') == [1,2,3,4,10,1,-1], "Normal Array creation failed to work"
