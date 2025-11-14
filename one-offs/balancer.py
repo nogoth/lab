@@ -14,16 +14,17 @@ def balancer(nums: list[int]) -> list(list[int]):
     j = len(nums)-1
     lsum, rsum = 0,0
     while i <= j :
-#        print(f"STATS: lsum={lsum} {nums[i]} = {i}    -- {j} = {nums[j]} {rsum}=rsum")
+#        print(f"STATS: lsum={lsum} val:{nums[i]} = i:{i}    -- j:{j} = val:{nums[j]} {rsum}=rsum")
         if lsum <= rsum:
             lsum += nums[i]
             i += 1
         else:
             rsum += nums[j]
             j -= 1
-#    print(f"Final STATS: lsum={lsum} {nums[i]} = {i}    -- {j} = {nums[j]} {rsum}=rsum")
+#    print(f"Final STATS: lsum={lsum} left:{i}    -- right:{j} {rsum}=rsum")
 
-    if lsum == rsum: # 
+    if lsum == rsum and nums[i:]: # 
+        # [[-10, 1, -8, 10, -5, -2, 9, -5, 0, 10], []] was valid because [0] == [0] but no
         return [ nums[:i], nums[i:] ]
     else:
         return []
@@ -55,6 +56,9 @@ def read_stdin_output_balanced():
             print(f"{balanced}" if balanced else "")
 
 def test_items():
+    print(f"{balancer([0, -8, -6, 0, 1, 5, 10, 2, 0, 4])}")
+    return
+
     # [[-10, 1, -8, 10, -5, -2, 9, -5, 0, 10], []]
     # 
     print(f"{balancer([-10, 1, -8, 10, -5, -2, 9, -5, 0, 10])}")
