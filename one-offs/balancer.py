@@ -8,6 +8,8 @@ def balancer(nums: list[int]) -> list(list[int]):
     # preserve order however, numbers can be negative, it will fit all in memory, partitions will likely be differing lengths
     # HINT: it's a two tail
 #    print(f"**  ${nums}")
+    if not nums: #there is a bug somewhere in turn_array if you pass it 'foo\n'
+        return []
     i = 0
     j = len(nums)-1
     lsum, rsum = 0,0
@@ -38,6 +40,7 @@ def valid_integer_list(stringsList: list) -> bool:
     return True
 
 def turn_array(raw_string: str) -> list:
+    # TODO: needs logic to protect against "1,2,3,4,"
     ta_array = raw_string.split(",")
     if valid_integer_list(ta_array):
         return [ int(x) for x in ta_array ] 
@@ -51,20 +54,36 @@ def read_stdin_output_balanced():
             balanced = balancer(ar)
             print(f"{balanced}" if balanced else "")
 
-print(f"{balancer([1,3,4,1])}")
-print(f"{balancer([1,2,3,4,2,1])}")
-print(f"{balancer([1,2,3,5,0,1])}")
-print(f"{balancer([1,2,3,4])}")
-print(f"{balancer([1,4,5])}")
-print(f"{balancer(arr)}")
-print(f"{balancer([1,2,3,4,1,1])}")
-print(f"{balancer([1,4,1,3,1])}")
-print(f"{balancer([1,4,1,3,1])}")
-print(f"{balancer([2,7,10,-1])}")
-print(f"{balancer([2,7,10,19])}")
+def test_items():
+    # [[-10, 1, -8, 10, -5, -2, 9, -5, 0, 10], []]
+    # 
+    print(f"{balancer([-10, 1, -8, 10, -5, -2, 9, -5, 0, 10])}")
+    return 
+    print(f"{balancer([1,3,4,1])}")
+    print(f"{balancer([1,2,3,4,2,1])}")
+    print(f"{balancer([1,2,3,5,0,1])}")
+    print(f"{balancer([1,2,3,4])}")
+    print(f"{balancer([1,4,5])}")
+    print(f"{balancer(arr)}")
+    print(f"{balancer([1,2,3,4,1,1])}")
+    print(f"{balancer([1,4,1,3,1])}")
+    print(f"{balancer([1,4,1,3,1])}")
+    print(f"{balancer([2,7,10,-1])}")
+    print(f"{balancer([2,7,10,19])}")
 
-# test to make sure that turn array handles at least some lined that could happen in the input
-assert turn_array("\n") == [], "strange spaced characters made an array" 
-assert turn_array("1,a") == [], "arrays that have characters made an integer array"
-assert turn_array("1") == [1], "single element didn't create a single element array"
-assert turn_array('1,2,3,4,10,01,-1') == [1,2,3,4,10,1,-1], "Normal Array creation failed to work"
+    # test to make sure that turn array handles at least some lined that could happen in the input
+    assert turn_array("\n") == [], "strange spaced characters made an array" 
+    assert turn_array("1,a") == [], "arrays that have characters made an integer array"
+    assert turn_array("1") == [1], "single element didn't create a single element array"
+    assert turn_array('1,2,3,4,10,01,-1') == [1,2,3,4,10,1,-1], "Normal Array creation failed to work"
+
+
+def open_file_output():
+    with open("integer.lists", 'r') as ilf:
+        for entry in ilf:
+            ta = turn_array(entry)
+            balanced = balancer(ta)
+            sys.stderr.write(f"balancer: {balanced} ta:{ta}\n" )
+            sys.stdout.write(f"{balanced}\n" if balanced else "")
+
+test_items()
