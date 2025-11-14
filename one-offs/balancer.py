@@ -7,23 +7,23 @@ def balancer(nums: list[int]) -> list(list[int]):
     # given an array partition it into two balanced sides, balanced defined as the sum of the elements
     # preserve order however, numbers can be negative, it will fit all in memory, partitions will likely be differing lengths
     # HINT: it's a two tail
-#    print(f"**  ${nums}")
+    print(f"**  ${nums}")
     if not nums: #there is a bug somewhere in turn_array if you pass it 'foo\n'
         return []
     i = 0
     j = len(nums)-1
     lsum, rsum = 0,0
-    while i <= j :
-#        print(f"STATS: lsum={lsum} val:{nums[i]} = i:{i}    -- j:{j} = val:{nums[j]} {rsum}=rsum")
+    while i < j :
+        print(f"STATS: lsum={lsum} val:{nums[i]} = i:{i}    -- j:{j} = val:{nums[j]} {rsum}=rsum")
         if lsum <= rsum:
             lsum += nums[i]
             i += 1
         else:
             rsum += nums[j]
             j -= 1
-#    print(f"Final STATS: lsum={lsum} left:{i}    -- right:{j} {rsum}=rsum")
+    print(f"Final STATS: lsum={lsum} left:{i} lv:{nums[i]}   -- right:{j} {rsum}=rsum rv:{nums[j]}")
 
-    if lsum == rsum and nums[i:]: # 
+    if lsum == rsum:# and nums[i:]: # 
         # [[-10, 1, -8, 10, -5, -2, 9, -5, 0, 10], []] was valid because [0] == [0] but no
         return [ nums[:i], nums[i:] ]
     else:
@@ -57,19 +57,22 @@ def read_stdin_output_balanced():
 
 def test_items():
     print(f"{balancer([0, -8, -6, 0, 1, 5, 10, 2, 0, 4])}")
-    return
 
     # [[-10, 1, -8, 10, -5, -2, 9, -5, 0, 10], []]
     # 
     print(f"{balancer([-10, 1, -8, 10, -5, -2, 9, -5, 0, 10])}")
-    return 
     print(f"{balancer([1,3,4,1])}")
     print(f"{balancer([1,2,3,4,2,1])}")
     print(f"{balancer([1,2,3,5,0,1])}")
     print(f"{balancer([1,2,3,4])}")
     print(f"{balancer([1,4,5])}")
     print(f"{balancer(arr)}")
+    
     print(f"{balancer([1,2,3,4,1,1])}")
+    return
+    assert balancer([1,2,3,4,1,1]) == [[1,2,3],[4,1,1]], "was not balanced"
+
+    
     print(f"{balancer([1,4,1,3,1])}")
     print(f"{balancer([1,4,1,3,1])}")
     print(f"{balancer([2,7,10,-1])}")
@@ -91,3 +94,4 @@ def open_file_output():
             sys.stdout.write(f"{balanced}\n" if balanced else "")
 
 test_items()
+#open_file_output()
