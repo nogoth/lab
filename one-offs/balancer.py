@@ -1,4 +1,5 @@
 import random
+import sys
 
 arr = [ random.randint(-100,120) for x in range(1000) ]
 # example given says take a file, read each line, it will be of a kind of each line = 1,2,3,4\n1,4,5\n
@@ -17,9 +18,14 @@ def balancer(nums: list[int]) -> list(list[int]):
             j -= 1
             rsum += nums[j]
         else:
+            i += 1
+            j -= 1
             # they are equal
-            print() #break out dude
-            i = j
+            # what if there are two flanking numbers but we haven't hit sum yet
+            #  previously did i = j
+            print(f" {i} left:{lsum} right:{rsum}")
+            sys.stdin.read()
+
     print(f" {i} left:{lsum} right:{rsum}")
     if lsum == rsum:
         return [ nums[:i], nums[i:] ]
@@ -46,6 +52,7 @@ def turn_array(raw_string: str) -> list:
 #print(f"{balancer([1,2,3,4])}")
 #print(f"{balancer([1,4,5])}")
 #print(f"{balancer(arr)}")
+print(f"{balancer([1,2,3,4,1,1])}")
 
 #- print(f"{turn_array('1,2,3,4,10,01,-1')}")
 #- print(f"{turn_array('1')}")
@@ -53,8 +60,10 @@ def turn_array(raw_string: str) -> list:
 #- print(f"{turn_array('\n')}")
 
 
-def dontdothis():
-    import sys
 
-    for x in sys.stdin:
-        print(f"{x.strip()}")
+for x in sys.stdin:
+    ar = turn_array(x)
+    if ar:
+#        print(f"{balancer(ar) for _ if balancer(ar)}")
+        balanced = balancer(ar)
+        print(f"{balanced}" if balanced else "")
