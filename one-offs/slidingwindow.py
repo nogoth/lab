@@ -47,15 +47,18 @@ class Solution:
                     minLeft = left # make minLeft be current left
                     minLength = right - left + 1 # update to new minimum size
                     print(f"ml:{minLeft} window:{minLength}")
-                break
+                tCounter[ s[left] ] += 1
+                if tCounter[ s[left] ] > 0:
+                    wanted +=1
+                left += 1
             print(f"ml:{minLeft} window:{minLength}")
 
         print(tCounter)
 
-        return ""
+        return "" if minLeft < 0 else s[minLeft:minLeft + minLength ] 
 
 assert Solution().minWindow("ADOBECODEBANC","ABC") == "BANC"
 assert Solution().minWindow("AAAAAAAAAAAA","AA") == "AA"
-assert Solution().minWindow("AAAAAABAAbAA","AA") == "Ab"
+assert Solution().minWindow("AAAAAABAAbAA","Ab") == "Ab"
 assert Solution().minWindow("a","aa") == ""
 assert Solution().minWindow("a","a") == "a"
