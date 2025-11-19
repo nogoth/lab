@@ -22,41 +22,35 @@ Since the largest window of s only has one 'a', return empty string.
 from collections import Counter
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-
         # short circuit since we can't ever not send "" in this case
         if len(s) < len(t):
             return ""
 
-        tCounter = Counter(t) # sets a dict up with the required chars keys , val = 0
-
+        minLeft = -1
+        minLength = len(s)+1
         left = 0 
-        minLeft = -1 #or float('inf')
+        required = len(t)
+        tc = Counter(t)
+        ## logic
+        for  right, val in enumerate(s):
+            tc[val] -= 1
+            if tc[val] >= 0:
+                required -= 1
+            while required == 0: #we found a subset
+                if right - left +1 < minLength:
+                    minLength = right - left + 1 
+                    minLeft = left
+                tc[s[left]] += 1
+                if tc[s[left]] > 0: #meaning we needed ii
+                    required += 1
 
-        wanted = len(t) # how many characters we want
-        minLength = len(s) + 1 # if we return it'll be at most all of S
-
-        # use right as the value in the enumerate
-        for right, val in enumerate(s):
-            tCounter[val] -= 1
-            if tCounter[val] >= 0:
-                wanted -= 1
-            print(f"val:{val} tval:{tCounter[val]} wanted:{wanted}")
-            while wanted == 0:
-                # oh hey, is our window smaller than the curr minlength windowsize placeholder?
-                if right - left + 1 < minLength:
-                    minLeft = left # make minLeft be current left
-                    minLength = right - left + 1 # update to new minimum size
-                    print(f"ml:{minLeft} window:{minLength}")
-                tCounter[ s[left] ] += 1
-                if tCounter[ s[left] ] > 0:
-                    wanted +=1
                 left += 1
-            print(f"ml:{minLeft} window:{minLength}")
-
-        print(tCounter)
+        ## /logic
+        print( s[minLeft:minLeft + minLength ] )
 
         return "" if minLeft < 0 else s[minLeft:minLeft + minLength ] 
 
+print(Solution().minWindow("ADOBECODEBANC","ABC") )
 assert Solution().minWindow("ADOBECODEBANC","ABC") == "BANC"
 assert Solution().minWindow("AAAAAAAAAAAA","AA") == "AA"
 assert Solution().minWindow("AAAAAABAAbAA","Ab") == "Ab"
