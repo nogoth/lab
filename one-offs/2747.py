@@ -32,24 +32,41 @@ class Solution:
         # logs are [server,timeofRequest] like 5,70 is server 5, time 70
         # x 
         from collections import Counter
+        from itertools import count
     
-        res = []
-        for i, query in enumerate(queries):
-            seens = Counter()
-            # x = 5 , query = 10, range then is from 5-> 10
+        res = [0] * len(queries)
+        ctr = Counter()
 
-            for server,stamp in logs:
-                if stamp >= query-x and stamp <= query:
-                    print(f"{server} seen at {stamp} for {query}")
-                    seens[server] += 1
-                
-            res.append(n - len(seens.keys()))
+        logs.sort( key = lambda log: log[1])
 
-            ## find_servers([queries[i] - x , queries[i]) # e.g. queries over [10,11] -> checks 5,10 duration and then 6,11 duration
+        right = 0
+        left = 0
+
+        for query, index in sorted(zip(queries, count())):
+            # remember query num is top end, and query - x is start
+            started = query - x
+            stopped = query
+
+            while right < len(logs) and logs[right][1] <= stopped:
+                srv = logs[right][0] 
+                ctr [ srv ] += 1
+                right +=1
+            while left < len(logs) and logs[left][1] < started:
+                srv = logs[left][0]
+                ctr[ srv ] -= 1
+                if ctr [ srv ] <= 0:
+                    ctr.pop(srv)
+                left += 1
+            print(f"** {logs} x: {x} stop: {stopped} start: {started} {ctr}")
+            
+            print(f"--{left}--{right}--")
+            res[index] = n - len(ctr.keys())
 
         return res
 
 
 
 print(Solution().countServers(n = 3, logs = [[1,3],[2,6],[1,5]], x = 5, queries = [10,11])) # [1,2]
+print(F"want 1,2")
 print(Solution().countServers(n = 3, logs = [[2,4],[2,1],[1,2],[3,1]], x = 2, queries = [3,4])) # [0, 1]
+print(f"want 0,1")
