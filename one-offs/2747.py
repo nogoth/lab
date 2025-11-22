@@ -7,7 +7,6 @@ Return a 0-indexed integer array arr of length queries.length where arr[i] repre
 
 Note that the time intervals are inclusive.
 
- 
 
 Example 1:
 
