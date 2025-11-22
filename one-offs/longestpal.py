@@ -22,6 +22,7 @@ class Solution:
         return f"{s[fleft:fleft + maxlength]}"
 
 
+print(Solution().longestPalindrome("aacabdkacaa")) # aca
 print(Solution().longestPalindrome("cbbd")) # bb
 print(Solution().longestPalindrome("babad")) # bab
 print(Solution().longestPalindrome("noon")) # noon
