@@ -7,7 +7,6 @@ Return a 0-indexed integer array arr of length queries.length where arr[i] repre
 
 Note that the time intervals are inclusive.
 
- 
 
 Example 1:
 
@@ -29,8 +28,28 @@ For queries[1]: Only server with id 3 gets no request in the duration [2,4].
 
 class Solution:
     def countServers(self, n: int, logs: list[list[int]], x: int, queries: list[int]) -> list[int]:
-        return []
+        # n is servers
+        # logs are [server,timeofRequest] like 5,70 is server 5, time 70
+        # x 
+        from collections import Counter
+    
+        res = []
+        for i, query in enumerate(queries):
+            seens = Counter()
+            # x = 5 , query = 10, range then is from 5-> 10
+
+            for server,stamp in logs:
+                if stamp >= query-x and stamp <= query:
+                    print(f"{server} seen at {stamp} for {query}")
+                    seens[server] += 1
+                
+            res.append(n - len(seens.keys()))
+
+            ## find_servers([queries[i] - x , queries[i]) # e.g. queries over [10,11] -> checks 5,10 duration and then 6,11 duration
+
+        return res
 
 
 
 print(Solution().countServers(n = 3, logs = [[1,3],[2,6],[1,5]], x = 5, queries = [10,11])) # [1,2]
+print(Solution().countServers(n = 3, logs = [[2,4],[2,1],[1,2],[3,1]], x = 2, queries = [3,4])) # [0, 1]
