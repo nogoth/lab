@@ -17,35 +17,30 @@ Output: 9
 
 class Solution:
     def trap(self, height: list[int]) -> int:
-        water = 0
         n = len(height)
         ans = [0] * n
 
-        for x in range(1,n-1): #-1 the end can never hold water
-            #sweep forward set the boxes to what it oculd be if the right side works out
-            if height[x-1] < height[x]:
-                ans[x] = height[x] - height[x-1]
-            if height[x-1] > height[x]:
-                ans[x] = height[x-1] - height[x]
-        print(height)
-        print(ans)
-        for y in range(n-1, -1, -1):
-            if ans[y] > 0:
-                print(f"possible bucket at y {y} {ans[y]} {height[y]}")
-                print(f"curr height :{height[y]} rightside: {height[y+1]}     {ans[y]}")
-                if height[y] < height[y+1]:
-                    ans[y] = 0
+        left = [0] * n
+        right = [0] * n
+
+        max_height = -1
+        for x in range(n):
+            if max_height < height[x]:
+                max_height = height[x]
+            left[x] = max_height
+
+        max_height = -1
+        for x in range(n-1, -1, -1):
+            if max_height < height[x]:
+                max_height = height[x]
+            right[x] = max_height
+        for x in range(n):
+            ans[x] = min(left[x], right[x]) - height[x]
 
         return (sum(ans))
 
 
-
-
-
-
-
 print( Solution().trap([0,1,0,2,1,0,1,3,2,1,2,1]) )
-
 print( Solution().trap([4,2,0,3,2,5]) )
 
 assert Solution().trap([0,1,0,2,1,0,1,3,2,1,2,1]) == 6
